@@ -1,38 +1,40 @@
 /dts-v1/;
 #include "mt7981.dtsi"
 / {
-    model = "Komi A31";
-    compatible = "komi,a31", "mediatek,mt7981";
+	model = "LC HX3001";
+	compatible = "lc,hx3001", "mediatek,mt7981";
+	chosen {
+		bootargs = "console=ttyS0,115200n1 loglevel=8  \
+				earlycon=uart8250,mmio32,0x11002000";
+	};
 
-    chosen {
-        bootargs = "console=ttyS0,115200n1 loglevel=8 earlycon=uart8250,mmio32,0x11002000";
-    };
+	memory {
+		reg = <0 0x40000000 0 0x10000000>;
+	};
 
-    memory {
-        reg = <0 0x40000000 0 0x10000000>;
-    };
+	leds {
+		compatible = "gpio-leds";
 
-    leds {
-        compatible = "gpio-leds";
+		system_led: system {
+			label = "system:green";
+			gpios = <&pio 4 GPIO_ACTIVE_LOW>;
+		};
 
-        led_green {
-            label = "led_green";
-            gpios = <&pio 8 GPIO_ACTIVE_LOW>;
-            default-state = "off";
-        };
+		lan {
+			label = "lan:green";
+			gpios = <&pio 8 GPIO_ACTIVE_LOW>;
+		};
+		
+		wan {
+			label = "wan:green";
+			gpios = <&pio 7 GPIO_ACTIVE_LOW>;
+		};
 
-        led_sys_blue {
-            label = "led_blue";
-            gpios = <&pio 13 GPIO_ACTIVE_LOW>;
-            default-state = "on";
-        };
-
-        led_red {
-            label = "net_red";
-            gpios = <&pio 22 GPIO_ACTIVE_LOW>;
-            default-state = "off";
-        };
-    };
+		wifi {
+			label = "wifi:green";
+			gpios = <&pio 5 GPIO_ACTIVE_LOW>;
+		};
+	};
 
 	gpio-keys {
 		compatible = "gpio-keys";
@@ -93,7 +95,7 @@
 
 			partition@580000 {
 				label = "ubi";
-				reg = <0x580000 0x7000000>;
+				reg = <0x580000 0x7200000>;
 			};
 		};
 	};

@@ -1,8 +1,8 @@
 /dts-v1/;
 #include "mt7981.dtsi"
 / {
-    model = "Komi A31";
-    compatible = "komi,a31", "mediatek,mt7981";
+    model = "ABT ASR3000";
+    compatible = "abt,asr3000", "mediatek,mt7981";
 
     chosen {
         bootargs = "console=ttyS0,115200n1 loglevel=8 earlycon=uart8250,mmio32,0x11002000";
@@ -15,21 +15,21 @@
     leds {
         compatible = "gpio-leds";
 
-        led_green {
-            label = "led_green";
-            gpios = <&pio 8 GPIO_ACTIVE_LOW>;
+        wan_red {
+            label = "wan_red";
+            gpios = <&pio 4 GPIO_ACTIVE_LOW>;
             default-state = "off";
         };
 
-        led_sys_blue {
-            label = "led_blue";
-            gpios = <&pio 13 GPIO_ACTIVE_LOW>;
+        wan_green {
+            label = "wan_green";
+            gpios = <&pio 8 GPIO_ACTIVE_LOW>;
             default-state = "on";
         };
 
-        led_red {
-            label = "net_red";
-            gpios = <&pio 22 GPIO_ACTIVE_LOW>;
+        wps {
+            label = "wps";
+            gpios = <&pio 15 GPIO_ACTIVE_LOW>;
             default-state = "off";
         };
     };
@@ -82,8 +82,13 @@
 			};
 
 			partition@180000 {
+				label = "art";
+				reg = <0x180000 0x0100000>;
+			};
+			
+			partition@280000 {
 				label = "Factory";
-				reg = <0x180000 0x0200000>;
+				reg = <0x280000 0x0100000>;
 			};
 
 			partition@380000 {
@@ -93,7 +98,7 @@
 
 			partition@580000 {
 				label = "ubi";
-				reg = <0x580000 0x7000000>;
+				reg = <0x580000 0x7200000>;
 			};
 		};
 	};
@@ -165,7 +170,7 @@
 
 &hnat {
 	mtketh-wan = "eth1";
-	mtketh-lan = "eth0";
+	mtketh-lan = "lan";
 	mtketh-max-gmac = <2>;
 	status = "okay";
 };

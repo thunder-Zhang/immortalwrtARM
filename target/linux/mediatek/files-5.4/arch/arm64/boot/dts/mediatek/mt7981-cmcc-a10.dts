@@ -1,38 +1,34 @@
 /dts-v1/;
 #include "mt7981.dtsi"
 / {
-    model = "Komi A31";
-    compatible = "komi,a31", "mediatek,mt7981";
+	model = "CMCC A10";
+	compatible = "cmcc,a10", "mediatek,mt7981";
+	chosen {
+		bootargs = "console=ttyS0,115200n1 loglevel=8 earlycon=uart8250,mmio32,0x11002000";
+	};
 
-    chosen {
-        bootargs = "console=ttyS0,115200n1 loglevel=8 earlycon=uart8250,mmio32,0x11002000";
-    };
+	memory {
+		reg = <0 0x40000000 0 0x10000000>;
+	};
 
-    memory {
-        reg = <0 0x40000000 0 0x10000000>;
-    };
+	leds {
+		compatible = "gpio-leds";
 
-    leds {
-        compatible = "gpio-leds";
+		led_wan_internet {
+			  label = "led_wan_internet";
+		  	gpios = <&pio 10 GPIO_ACTIVE_LOW>;
+		};
 
-        led_green {
-            label = "led_green";
-            gpios = <&pio 8 GPIO_ACTIVE_LOW>;
-            default-state = "off";
-        };
-
-        led_sys_blue {
-            label = "led_blue";
-            gpios = <&pio 13 GPIO_ACTIVE_LOW>;
-            default-state = "on";
-        };
-
-        led_red {
-            label = "net_red";
-            gpios = <&pio 22 GPIO_ACTIVE_LOW>;
-            default-state = "off";
-        };
-    };
+		led_lan3 {
+			  label = "led_lan3";
+			  gpios = <&pio 9 GPIO_ACTIVE_LOW>;
+		};
+        
+		led_sys {
+			  label = "led_sys";
+			  gpios = <&pio 11 GPIO_ACTIVE_LOW>;
+		};
+	};
 
 	gpio-keys {
 		compatible = "gpio-keys";
@@ -45,7 +41,7 @@
 			wps {
 				label = "wps";
 				linux,code = <KEY_WPS_BUTTON>;
-				gpios = <&pio 0 GPIO_ACTIVE_HIGH>;
+				gpios = <&pio 0 GPIO_ACTIVE_LOW>;
 			};
 	};
 
@@ -93,7 +89,7 @@
 
 			partition@580000 {
 				label = "ubi";
-				reg = <0x580000 0x7000000>;
+				reg = <0x580000 0x7200000>;
 			};
 		};
 	};
@@ -125,30 +121,40 @@
 	gmac1: mac@1 {
 		compatible = "mediatek,eth-mac";
 		reg = <1>;
-		phy-mode = "gmii";
-		phy-handle = <&phy0>;
+		phy-mode = "2500base-x";
+
+		fixed-link {
+			speed = <2500>;
+			full-duplex;
+			pause;
+		};
 	};
 
 	mdio: mdio-bus {
 		#address-cells = <1>;
 		#size-cells = <0>;
-		
-		phy0: phy@0 {
-			compatible = "ethernet-phy-id03a2.9461";
-			reg = <0>;
-			nvmem-cells = <&phy_calibration>;
-			nvmem-cell-names = "phy-cal-data";
-		};
 	};
 };
 
 &gsw {
 	mediatek,mdio = <&mdio>;
+	mediatek,portmap = "llllw";
 	mediatek,mdio_master_pinmux = <0>;
-	reset-gpios = <&pio 39 0>;
+	reset-gpios = <&pio 54 0>;
 	interrupt-parent = <&pio>;
 	interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
 	status = "okay";
+
+	port5: port@5 {
+		compatible = "mediatek,mt753x-port";
+		reg = <5>;
+		phy-mode = "sgmii";
+
+		fixed-link {
+			speed = <2500>;
+			full-duplex;
+		};
+	};
 
 	port6: port@6 {
 		compatible = "mediatek,mt753x-port";
