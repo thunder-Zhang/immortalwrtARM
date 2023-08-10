@@ -25,15 +25,30 @@ case "$(board_name)" in
 	ucidef_set_led_default "red" "RED" "ct3003:red" "0"
 	;;
 *wr30u*)
-        ucidef_set_led_default "sys_blue" "BLUE" "led_blue" "1"
-        ucidef_set_led_default "sys_yellow" "YELLOW" "led_yellow" "0"
-        ucidef_set_led_netdev "net_blue" "NET_BLUE" "net_blue" "eth1"
+    ucidef_set_led_default "sys_blue" "BLUE" "led_blue" "1"
+    ucidef_set_led_default "sys_yellow" "YELLOW" "led_yellow" "0"
+    ucidef_set_led_netdev "net_blue" "NET_BLUE" "net_blue" "eth1"
+	;;
+*hx3001*)
+    ucidef_set_led_default "system_led" "GREEN" "system:green" "1"
+    ucidef_set_led_default "wifi" "GREEN" "wifi:green" "0"
+    ucidef_set_led_default "wan" "GREEN" "wan:green" "eth1"
+    ucidef_set_led_netdev "lan" "GREEN" "lan:green" "eth0"
 	;;
 *komi,a31*)
 	ucidef_set_led_default "led_green" "GREEN" "komia31:green" "1"
 	ucidef_set_led_default "led_blue" "BLUE" "komia31:blue" "0"
 	;;
+cmcc,a10*)
+    ucidef_set_led_default "led_wan_internet" "BLUE" "led_blue" "1"
+	ucidef_set_led_default "led_sys" "RED" "led_red" "1"
+	ucidef_set_led_default "led_lan3" "GREEN" "led_green" "1"
+	;;
 *cmcc,rax3000m*)
+	ucidef_set_led_default "led_green" "GREEN" "green:system" "1"
+	ucidef_set_led_default "led_blue" "BLUE" "blue:wan" "0"
+	;;
+*cmcc,rax3000m-emmc-rfb*)
 	ucidef_set_led_default "led_green" "GREEN" "green:system" "1"
 	ucidef_set_led_default "led_blue" "BLUE" "blue:wan" "0"
 	;;
