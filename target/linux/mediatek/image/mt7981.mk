@@ -359,29 +359,12 @@ define Device/xiaomi_wr30u-112M
 endef
 TARGET_DEVICES += xiaomi_wr30u-112M
 
-define Device/mt7981-komi-a31
-  DEVICE_VENDOR := MediaTek
-  DEVICE_MODEL := KOMI A31
-  DEVICE_DTS := mt7981-komi-a31
+define Device/lc_hx3001
+  DEVICE_VENDOR := LC
+  DEVICE_MODEL := HX3001
+  DEVICE_DTS := mt7981-lc-hx3001
   DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
-  SUPPORTED_DEVICES := komi,a31
-  UBINIZE_OPTS := -E 5
-  BLOCKSIZE := 128k
-  PAGESIZE := 2048
-  IMAGE_SIZE := 114688k
-  KERNEL_IN_UBI := 1
-  IMAGES += factory.bin
-  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
-  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-endef
-TARGET_DEVICES += mt7981-komi-a31
-
-define Device/mt7981-cmcc-rax3000m
-  DEVICE_VENDOR := CMCC
-  DEVICE_MODEL := RAX3000M
-  DEVICE_DTS := mt7981-cmcc-rax3000m
-  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
-  SUPPORTED_DEVICES := cmcc,rax3000m
+  SUPPORTED_DEVICES := lc,hx3001
   UBINIZE_OPTS := -E 5
   BLOCKSIZE := 128k
   PAGESIZE := 2048
@@ -391,4 +374,68 @@ define Device/mt7981-cmcc-rax3000m
   IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
-TARGET_DEVICES += mt7981-cmcc-rax3000m
+TARGET_DEVICES += lc_hx3001
+
+define Device/komi-a31
+  DEVICE_VENDOR := KOMI
+  DEVICE_MODEL := A31
+  DEVICE_DTS := mt7981-komi-a31
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  SUPPORTED_DEVICES := komi,a31
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 116736k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += komi-a31
+
+define Device/cmcc-a10
+  DEVICE_VENDOR := CMCC
+  DEVICE_MODEL := A10	
+  DEVICE_DTS := mt7981-cmcc-a10
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  SUPPORTED_DEVICES := cmcc,a10
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 114688k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += cmcc-a10
+
+define Device/abt_asr3000
+  DEVICE_VENDOR := ABT
+  DEVICE_MODEL := ASR3000
+  DEVICE_DTS := mt7981-abt-asr3000
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  SUPPORTED_DEVICES := abt,asr3000
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 116736k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += abt_asr3000
+
+define Device/mt7981-cmcc-rax3000m-emmc-rfb
+  DEVICE_VENDOR := CMCC
+  DEVICE_MODEL := RAX3000M-eMMC
+  DEVICE_DTS := mt7981-cmcc-rax3000m-emmc-rfb
+  SUPPORTED_DEVICES := cmcc,rax3000m-emmc-rfb
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  DEVICE_PACKAGES := mkf2fs e2fsprogs blkid blockdev losetup kmod-fs-ext4 \
+		     kmod-mmc kmod-fs-f2fs kmod-fs-vfat kmod-nls-cp437 \
+		     kmod-nls-iso8859-1
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += mt7981-cmcc-rax3000m-emmc-rfb
