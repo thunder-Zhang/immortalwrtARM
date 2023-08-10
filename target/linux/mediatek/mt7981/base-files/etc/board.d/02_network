@@ -9,16 +9,17 @@ mediatek_setup_interfaces()
 	local board="$1"
 
 	case $board in
+	*cmcc,a10* |\
 	*fpga*)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
 		ucidef_add_switch "switch0" \
 			"0:lan" "1:lan" "2:lan" "3:lan" "4:wan" "6u@eth0" "5u@eth1"
 		;;
 	*rfb*)
-	       ucidef_set_interfaces_lan_wan "eth0.1 ra0 ra1 rai0 rai1" "eth0.2"
-               ucidef_add_switch "switch0" \
-                       "1:lan" "2:lan" "3:lan" "0:wan" "6t@eth0"
-        	;;
+	    ucidef_set_interfaces_lan_wan "eth0.1 ra0 ra1 rai0 rai1" "eth0.2"
+        ucidef_add_switch "switch0" \
+            "1:lan" "2:lan" "3:lan" "0:wan" "6t@eth0"
+        ;;
 	*2500wan-p5*)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" wan
 		;;
@@ -40,31 +41,46 @@ mediatek_setup_interfaces()
 		ucidef_add_switch "switch0" \
  			"0:lan" "1:lan" "2:lan" "3:wan" "6u@eth0" "5u@eth1"
 		;;
-        *wr30u*)
-               ucidef_set_interfaces_lan_wan "eth0 ra0 ra1 rai0 rai1" "eth1"
-               ucidef_add_switch "switch0" \
-                       "1:lan" "2:lan" "3:lan" "0:wan" "6u@eth0" "5u@eth1"
-        	;;
+    *wr30u*)
+        ucidef_set_interfaces_lan_wan "eth0 ra0 ra1 rai0 rai1" "eth1"
+        ucidef_add_switch "switch0" \
+            "1:lan" "2:lan" "3:lan" "0:wan" "6u@eth0" "5u@eth1"
+        ;;
 	*komi,a31*)
 		ucidef_set_interfaces_lan_wan "eth0 ra0 ra1 rai0 rai1" "eth1"
 		ucidef_add_switch "switch0" \
 			"0:lan" "1:lan" "2:lan" "3:wan" "6u@eth0" "5u@eth1"
 		;;
-	*cmcc,rax3000m*)
+	*rax3000m*)
+		ucidef_set_interfaces_lan_wan "eth0" "eth1"
+		ucidef_add_switch "switch0" \
+			"0:lan" "1:lan" "2:lan" "6u@eth0"
+		;;
+	*rax3000m-emmc-rfb*)
+		ucidef_set_interfaces_lan_wan "eth0" "eth1"
+		ucidef_add_switch "switch0" \
+			"0:lan" "1:lan" "2:lan" "6u@eth0"
+		;;
+	*lc,hx3001*)
+		ucidef_set_interfaces_lan_wan "eth0 ra0 ra1 rai0 rai1" "eth1"
+		ucidef_add_switch "switch0" \
+			"0:lan" "1:lan" "2:lan" "6u@eth0"
+		;;
+	*abt,asr3000*)
 		ucidef_set_interfaces_lan_wan "eth0 ra0 ra1 rai0 rai1" "eth1"
 		ucidef_add_switch "switch0" \
 			"0:lan" "1:lan" "2:lan" "6u@eth0"
 		;;
 	*jcg,q30*)
 		ucidef_set_interfaces_lan_wan "eth0.1 ra0 ra1 rai0 rai1" "eth0.2"
-                ucidef_add_switch "switch0" \
-                       "1:lan" "2:lan" "3:lan" "0:wan" "6t@eth0"
-        	;;
+        ucidef_add_switch "switch0" \
+            "1:lan" "2:lan" "3:lan" "0:wan" "6t@eth0"
+        ;;
 	*)
  		ucidef_set_interfaces_lan_wan "eth0 ra0 ra1 rai0 rai1" "eth1"
  		ucidef_add_switch "switch0" \
   			"0:lan" "1:lan" "2:lan" "3:lan" "4:lan" "6u@eth0"
-        	;;
+        ;;
 	esac
 }
 
@@ -119,14 +135,14 @@ mediatek_setup_macs()
 	lan_mac="$(macaddr_add $wifi_mac -1)"
 	wan_mac="$(macaddr_add $wifi_mac -2)"
 		;;
-        *wr30u*)
-                wan_mac=$(dd if=/dev/mtd3ro bs=1 count=256 2>/dev/null |grep "^ethaddr_wan=" | awk -F '=' '{print $2}')
-                lan_mac=$(dd if=/dev/mtd3ro bs=1 count=256 2>/dev/null |grep "^ethaddr=" | awk -F '=' '{print $2}')
-                ;;
-        *h3c,nx30pro*)
-        	if [ "$(mtk_factory_get_byte "Factory" 4 2)" = "00-0c" ]; then
-        	wan_mac=$(dd if=/dev/mtd7 skip=684 count=1  2>/dev/null |grep "^ethaddr=" | awk -F '=' '{print $2}')
-        	lan_mac=$(macaddr_add "$wan_mac" 1)
+    *wr30u*)
+        wan_mac=$(dd if=/dev/mtd3ro bs=1 count=256 2>/dev/null |grep "^ethaddr_wan=" | awk -F '=' '{print $2}')
+        lan_mac=$(dd if=/dev/mtd3ro bs=1 count=256 2>/dev/null |grep "^ethaddr=" | awk -F '=' '{print $2}')
+        ;;
+    *h3c,nx30pro*)
+        if [ "$(mtk_factory_get_byte "Factory" 4 2)" = "00-0c" ]; then
+        wan_mac=$(dd if=/dev/mtd7 skip=684 count=1  2>/dev/null |grep "^ethaddr=" | awk -F '=' '{print $2}')
+        lan_mac=$(macaddr_add "$wan_mac" 1)
 		local wifi_mac="$(macaddr_add $wan_mac 0x2)"
 		mtk_facrory_write_mac "Factory" 4 $wifi_mac
 		else
@@ -134,13 +150,13 @@ mediatek_setup_macs()
 		lan_mac="$(macaddr_add $wifi_mac 1)"
 		wan_mac="$(macaddr_add $wifi_mac 2)"
 		fi
-        	;;
-        *cetron,ct3003*)
+        ;;
+    *cetron,ct3003*)
 		lan_mac=$(mtd_get_mac_ascii ART MAC_ADDRESS)
-        	wan_mac=$(macaddr_add "$lan_mac" 0x3)
+        wan_mac=$(macaddr_add "$lan_mac" 0x3)
 		local wifi_mac="$(macaddr_add $lan_mac 0x1)"
 		mtk_facrory_write_mac "Factory" 4 $wifi_mac
-        	;;
+        ;;
 	*mt3000*)
 		wan_mac=$(mtd_get_mac_binary $part_name 0x0a)
 		lan_mac=$(macaddr_add "$wan_mac" 1)
@@ -154,6 +170,13 @@ mediatek_setup_macs()
 		wan_mac=$(get_mac_binary /dev/mmcblk0p3 0x0a)
 		lan_mac=$(macaddr_add "$wan_mac" 1)
 		;;
+	*asr3000*)
+        *cetron,ct3003*)
+		lan_mac=$(mtd_get_mac_ascii ART MAC_ADDRESS)
+        wan_mac=$(macaddr_add "$lan_mac" 0x3)
+		local wifi_mac="$(macaddr_add $lan_mac 0x1)"
+		mtk_facrory_write_mac "Factory" 4 $wifi_mac
+        ;;
 	*360,t7*)
 		local part=$(find_mtd_part "stock-factory")
 		if [ -n "$part" ]; then
@@ -169,6 +192,9 @@ mediatek_setup_macs()
 		fi
 		;;
 	esac
+	
+	lan_mac=$(rtmac_lan)
+	wan_mac=$(rtmac_wan)
 
 	case "$lan_mac" in
 		00:00:00:00:00:00);;
